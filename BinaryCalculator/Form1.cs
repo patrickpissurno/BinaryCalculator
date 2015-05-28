@@ -38,10 +38,13 @@ namespace BinaryCalculator
                     if (textBox1.Text.Length > MAX_LENGTH)
                         throw new Exception();
                     float.Parse(textBox1.Text);
-                    if (textBox1.Text.IndexOfAny(new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'E', 'e', '.', ',' }) == -1)
-                        lastText = textBox1.Text.Trim();
-                    else
-                        throw new Exception();
+                    if (!ignoreBlock)
+                    {
+                        if (textBox1.Text.IndexOfAny(new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'E', 'e', '.', ',' }) == -1)
+                            lastText = textBox1.Text.Trim();
+                        else
+                            throw new Exception();
+                    }
                 }
             }
             catch
@@ -77,25 +80,43 @@ namespace BinaryCalculator
                 switch (op)
                 {
                     case "+":
-                        SetText(Sum(value1, value0));
+                        SetText(ChangeOutput(Sum(value1, value0)));
                         break;
                     case "*":
-                        SetText(Plus(value1, value0));
+                        SetText(ChangeOutput(Plus(value1, value0)));
                         break;
                     case "-":
-                        SetText(Subtract(value1, value0));
+                        SetText(ChangeOutput(Subtract(value1, value0)));
                         break;
                     case "/":
-                        SetText(Division(value1, value0));
+                        SetText(ChangeOutput(Division(value1, value0)));
+                        break;
+                    case "":
+                        SetText(ChangeOutput(value0));
                         break;
                 }
             }
         }
         #endregion
 
+        #region ChangeOutput
+        string ChangeOutput(string val)
+        {
+            if (radioButton3.Checked)
+                return TrimZeros(val);
+            else if (radioButton2.Checked)
+            {
+                ignoreBlock = true;
+                return BinaryToDecimal(val);
+            }
+            return val;
+        }
+        #endregion
+
         #region OP Buttons
         private void op_Click(object sender, EventArgs e)
         {
+            ignoreBlock = false;
             if (op != "")
                 ProcessData();
             UpdateValues(textBox1.Text);
@@ -107,6 +128,7 @@ namespace BinaryCalculator
         #region Num Buttons
         private void num_Click(object sender, EventArgs e)
         {
+            ignoreBlock = false;
             textBox1.AppendText((sender as Button).Text);
         }
         #endregion
@@ -120,8 +142,11 @@ namespace BinaryCalculator
 
         void UpdateValues(string val)
         {
-            value1 = value0;
-            value0 = TrimZeros(val);
+            if (!ignoreBlock)
+            {
+                value1 = value0;
+                value0 = TrimZeros(val);
+            }
         }
         #endregion
 
