@@ -1,0 +1,9 @@
+C:\Users\patrickpissurno\Documents\GitHub\BinaryCalculator\BinaryCalculator\bin\Debug\BinaryCalculator.exe.config
+C:\Users\patrickpissurno\Documents\GitHub\BinaryCalculator\BinaryCalculator\bin\Debug\BinaryCalculator.exe
+C:\Users\patrickpissurno\Documents\GitHub\BinaryCalculator\BinaryCalculator\bin\Debug\BinaryCalculator.pdb
+C:\Users\patrickpissurno\Documents\GitHub\BinaryCalculator\BinaryCalculator\obj\Debug\BinaryCalculator.csprojResolveAssemblyReference.cache
+C:\Users\patrickpissurno\Documents\GitHub\BinaryCalculator\BinaryCalculator\obj\Debug\BinaryCalculator.Form1.resources
+C:\Users\patrickpissurno\Documents\GitHub\BinaryCalculator\BinaryCalculator\obj\Debug\BinaryCalculator.Properties.Resources.resources
+C:\Users\patrickpissurno\Documents\GitHub\BinaryCalculator\BinaryCalculator\obj\Debug\BinaryCalculator.csproj.GenerateResource.Cache
+C:\Users\patrickpissurno\Documents\GitHub\BinaryCalculator\BinaryCalculator\obj\Debug\BinaryCalculator.exe
+C:\Users\patrickpissurno\Documents\GitHub\BinaryCalculator\BinaryCalculator\obj\Debug\BinaryCalculator.pdb
