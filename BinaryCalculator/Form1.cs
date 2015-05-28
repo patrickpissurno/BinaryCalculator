@@ -23,6 +23,7 @@ namespace BinaryCalculator
             radioButton3.Select();
         }
 
+        #region Input Handling
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             try
@@ -48,23 +49,20 @@ namespace BinaryCalculator
             }
 
         }
+        #endregion
 
         private void button7_Click(object sender, EventArgs e)
         {
-            string val0 = "1";
-            string val1 = "10";
-
-            MessageBox.Show(Plus("11", "11"));
+            //MessageBox.Show(Division("100","10"));
+            //MessageBox.Show(Subtract("100", "10"));
+            MessageBox.Show(Sum(Normalize("101", "1")[0], Normalize("101", "1")[1]));
         }
 
         #region Sum
         string Sum(string val0, string val1)
         {
-            //Normaliza a length
-            while (val0.Length > val1.Length)
-                val1 = "0" + val1;
-            while (val1.Length > val0.Length)
-                val0 = "0" + val0;
+            val0 = Normalize(val0, val1)[0];
+            val1 = Normalize(val0, val1)[1];
 
             string result = "";
             string next_bonus = "0";
@@ -97,15 +95,62 @@ namespace BinaryCalculator
         #region Plus
         string Plus(string val, string total)
         {
-            string current = "0";
             string result = "0";
-            while (current != total)
-            {
+            for (string i = "0"; i != total; i = Sum(i, "1"))
                 result = Sum(result, val);
-                current = Sum(current, "1");
-            }
             return result;
         }
         #endregion
+
+        #region Subtract
+        string Subtract(string val0, string val1)
+        {
+            val0 = Normalize(val0, val1)[0];
+            val1 = Normalize(val0, val1)[1];
+
+            string result = "";
+            val1 = val1.Replace('0', 'z');
+            val1 = val1.Replace('1', '0');
+            val1 = val1.Replace('z', '1');
+            
+            val1 = Sum(val1, "1");
+
+            result = Sum(val0, val1);
+            MessageBox.Show(val0 + "\n" + val1 + "\n" + result);
+
+            result = result.Substring(1, result.Length - 1);
+            return result;
+        }
+
+        string[] Normalize(string val0, string val1)
+        {
+            while (val0.Length > val1.Length)
+                val1 = "0" + val1;
+            while (val1.Length > val0.Length)
+                val0 = "0" + val0;
+            return new string[] { val0, val1 };
+        }
+        #endregion
+
+        string Division(string val0, string val1)
+        {
+            val0 = Normalize(val0, val1)[0];
+            val1 = Normalize(val0, val1)[1];
+
+            string result = "0";
+            while (true)
+            {
+                if (val0 != Normalize(val0, "0")[1])
+                {
+                    val0 = Subtract(val0, val1);
+                    MessageBox.Show(Subtract("100", "010"));
+                    result = Sum(result, "1");
+                }
+                else
+                    break;
+                MessageBox.Show(val0 + "\n" + Normalize(val0, "0")[1] + "\n" + result);
+            }
+            return result;
+        }
     }
 }
