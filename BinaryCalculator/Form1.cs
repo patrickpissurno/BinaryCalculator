@@ -53,8 +53,8 @@ namespace BinaryCalculator
         {
             string val0 = "1";
             string val1 = "10";
-            MessageBox.Show(Sum(val0, val1));
-            
+
+            MessageBox.Show(Plus("11", "11"));
         }
 
         #region Sum
@@ -89,6 +89,20 @@ namespace BinaryCalculator
                     result = "0" + result;
                 else
                     result = "1" + result;
+            }
+            return result;
+        }
+        #endregion
+
+        #region Plus
+        string Plus(string val, string total)
+        {
+            string current = "0";
+            string result = "0";
+            while (current != total)
+            {
+                result = Sum(result, val);
+                current = Sum(current, "1");
             }
             return result;
         }
