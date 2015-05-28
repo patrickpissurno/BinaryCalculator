@@ -14,8 +14,9 @@ namespace BinaryCalculator
     {
         public string lastText = "";
 
-        int value0 = 0;
-        int value1 = 0;
+        string value0 = "0";
+        string value1 = "0";
+        string op = "";
 
         public Form1()
         {
@@ -53,10 +54,61 @@ namespace BinaryCalculator
 
         private void button7_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show(Division("100","10"));
-            //MessageBox.Show(Subtract("100", "10"));
-            MessageBox.Show(Sum(Normalize("101", "1")[0], Normalize("101", "1")[1]));
+            ProcessData();
+            op = "";
         }
+
+        #region ProcessData
+        void ProcessData()
+        {
+            if (string.IsNullOrWhiteSpace(textBox1.Text))
+                textBox1.Text = "0";
+            UpdateValues(textBox1.Text);
+            if (Normalize(value0, "0")[0] != Normalize(value0, "0")[1] || Normalize(value1, "0")[0] != Normalize(value1, "0")[1])
+            {
+                switch (op)
+                {
+                    case "+":
+                        SetText(Sum(value1, value0));
+                        break;
+                    case "*":
+                        SetText(Plus(value1, value0));
+                        break;
+                    case "-":
+                        SetText(Subtract(value1, value0));
+                        break;
+                    case "/":
+                        SetText(Division(value1, value0));
+                        break;
+                }
+            }
+        }
+        #endregion
+
+        #region OP Buttons
+        private void op_Click(object sender, EventArgs e)
+        {
+            if (op != "")
+                ProcessData();
+            UpdateValues(textBox1.Text);
+            textBox1.Text = "";
+            op = (sender as Button).Text;
+        }
+        #endregion
+
+        #region Util
+        void SetText(string val)
+        {
+            UpdateValues(val);
+            textBox1.Text = TrimZeros(val);
+        }
+
+        void UpdateValues(string val)
+        {
+            value1 = value0;
+            value0 = TrimZeros(val);
+        }
+        #endregion
 
         #region Sum
         string Sum(string val0, string val1)
@@ -68,26 +120,42 @@ namespace BinaryCalculator
             string next_bonus = "0";
             for (int i = val0.Length; i > 0; i--)
             {
-                if ((val0[i - 1] == '1' && val1[i - 1] == '1') || ((val0[i - 1] == '1' || val1[i - 1] == '1') && next_bonus == "1"))
+                int n = i - 1;
+                if (next_bonus == "1")
                 {
-                    if (((val0[i - 1] == '1' && val1[i - 1] == '1') && next_bonus == "0") || ((val0[i - 1] == '1' && val1[i - 1] == '0') && next_bonus == "1") || ((val0[i - 1] == '0' && val1[i - 1] == '1') && next_bonus == "1"))
+                    if (val0[n] != val1[n])
                     {
                         result = "0" + result;
                         next_bonus = "1";
                     }
-                    else if ((val0[i - 1] == '1' && val1[i - 1] == '1') && next_bonus == "1")
+                    else
+                    {
+                        if (val0[n] == '0')
+                            next_bonus = "0";
+                        else
+                            next_bonus = "1";
+                        result = "1" + result;
+                    }
+                }
+                else
+                {
+                    if (val0[n] != val1[n])
                     {
                         result = "1" + result;
-                        next_bonus = "1";
+                        next_bonus = "0";
                     }
-                    if (i == 1)
-                        result = next_bonus + result;
+                    else
+                    {
+                        result = "0" + result;
+                        if (val0[n] == '0')
+                            next_bonus = "0";
+                        else
+                            next_bonus = "1";
+                    }
                 }
-                else if (val0[i - 1] == '0' && val1[i - 1] == '0')
-                    result = "0" + result;
-                else
-                    result = "1" + result;
             }
+            if (next_bonus == "1")
+                result = "1" + result;
             return result;
         }
         #endregion
@@ -112,16 +180,61 @@ namespace BinaryCalculator
             val1 = val1.Replace('0', 'z');
             val1 = val1.Replace('1', '0');
             val1 = val1.Replace('z', '1');
-            
             val1 = Sum(val1, "1");
-
             result = Sum(val0, val1);
-            MessageBox.Show(val0 + "\n" + val1 + "\n" + result);
-
             result = result.Substring(1, result.Length - 1);
+            return TrimZeros(result);
+        }
+        #endregion
+
+        #region Division
+        string Division(string val0, string val1)
+        {
+            val0 = Normalize(val0, val1)[0];
+            val1 = Normalize(val0, val1)[1];
+            string result = "0";
+            while (true)
+            {
+                if (IsGreater(val0, "0"))
+                {
+                    val0 = Subtract(val0, val1);
+                    result = Sum(result, "1");
+                }
+                else
+                    break;
+                if (IsGreater(val1, val0))
+                    break;
+            }
             return result;
         }
+        #endregion
 
+        #region TrimZeros
+        string TrimZeros(string val)
+        {
+            if (val.Length > 1)
+            {
+                bool found = false;
+                for (int i = 0; i < val.Length; i++)
+                {
+                    if(!found)
+                    {
+                        if (val[i] != '0')
+                            found = true;
+                    }
+                    if (found)
+                        return val.Substring(i, val.Length - i);
+                }
+                if (Normalize(val, "0")[0] == Normalize(val, "0")[1])
+                    return "0";
+                return val;
+            }
+            else
+                return val;
+        }
+        #endregion
+
+        #region Normalize
         string[] Normalize(string val0, string val1)
         {
             while (val0.Length > val1.Length)
@@ -132,25 +245,21 @@ namespace BinaryCalculator
         }
         #endregion
 
-        string Division(string val0, string val1)
+        #region IsGreater
+        bool IsGreater(string val0, string val1)
         {
             val0 = Normalize(val0, val1)[0];
             val1 = Normalize(val0, val1)[1];
 
-            string result = "0";
-            while (true)
+            for (int i = 0; i < val0.Length; i++)
             {
-                if (val0 != Normalize(val0, "0")[1])
-                {
-                    val0 = Subtract(val0, val1);
-                    MessageBox.Show(Subtract("100", "010"));
-                    result = Sum(result, "1");
-                }
-                else
+                if(val1[i] == '1' && val0[i] == '0')
                     break;
-                MessageBox.Show(val0 + "\n" + Normalize(val0, "0")[1] + "\n" + result);
+                if (val0[i] == '1' && val1[i] == '0')
+                    return true;
             }
-            return result;
+            return false;
         }
+        #endregion
     }
 }
