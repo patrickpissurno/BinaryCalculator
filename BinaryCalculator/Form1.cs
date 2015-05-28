@@ -20,6 +20,8 @@ namespace BinaryCalculator
         string value1 = "0";
         string op = "";
 
+        bool ignoreBlock = false;
+
         public Form1()
         {
             InitializeComponent();
@@ -272,6 +274,27 @@ namespace BinaryCalculator
                     return true;
             }
             return false;
+        }
+        #endregion
+
+        #region BinaryToDecimal
+        string BinaryToDecimal(string val)
+        {
+            val = TrimZeros(val);
+            List<int> sum = new List<int>();
+
+            //Fill the list
+            for (int i = val.Length; i > 0; i--)
+                sum.Add((int)Math.Pow(2,i-1));
+
+            int result = 0;
+            for (int i = 0; i < val.Length; i++)
+            {
+                if (val[i] == '1')
+                    result += sum[i];
+            }
+
+            return result.ToString();
         }
         #endregion
     }
