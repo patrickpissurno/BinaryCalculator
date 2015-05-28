@@ -13,6 +13,10 @@ namespace BinaryCalculator
     public partial class Form1 : Form
     {
         public string lastText = "";
+
+        int value0 = 0;
+        int value1 = 0;
+
         public Form1()
         {
             InitializeComponent();
@@ -44,5 +48,50 @@ namespace BinaryCalculator
             }
 
         }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            string val0 = "1";
+            string val1 = "10";
+            MessageBox.Show(Sum(val0, val1));
+            
+        }
+
+        #region Sum
+        string Sum(string val0, string val1)
+        {
+            //Normaliza a length
+            while (val0.Length > val1.Length)
+                val1 = "0" + val1;
+            while (val1.Length > val0.Length)
+                val0 = "0" + val0;
+
+            string result = "";
+            string next_bonus = "0";
+            for (int i = val0.Length; i > 0; i--)
+            {
+                if ((val0[i - 1] == '1' && val1[i - 1] == '1') || ((val0[i - 1] == '1' || val1[i - 1] == '1') && next_bonus == "1"))
+                {
+                    if (((val0[i - 1] == '1' && val1[i - 1] == '1') && next_bonus == "0") || ((val0[i - 1] == '1' && val1[i - 1] == '0') && next_bonus == "1") || ((val0[i - 1] == '0' && val1[i - 1] == '1') && next_bonus == "1"))
+                    {
+                        result = "0" + result;
+                        next_bonus = "1";
+                    }
+                    else if ((val0[i - 1] == '1' && val1[i - 1] == '1') && next_bonus == "1")
+                    {
+                        result = "1" + result;
+                        next_bonus = "1";
+                    }
+                    if (i == 1)
+                        result = next_bonus + result;
+                }
+                else if (val0[i - 1] == '0' && val1[i - 1] == '0')
+                    result = "0" + result;
+                else
+                    result = "1" + result;
+            }
+            return result;
+        }
+        #endregion
     }
 }
