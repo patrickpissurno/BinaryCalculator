@@ -14,6 +14,8 @@ namespace BinaryCalculator
     {
         public string lastText = "";
 
+        const int MAX_LENGTH = 30;
+
         string value0 = "0";
         string value1 = "0";
         string op = "";
@@ -31,6 +33,8 @@ namespace BinaryCalculator
             {
                 if (!string.IsNullOrWhiteSpace(textBox1.Text))
                 {
+                    if (textBox1.Text.Length > MAX_LENGTH)
+                        throw new Exception();
                     float.Parse(textBox1.Text);
                     if (textBox1.Text.IndexOfAny(new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'E', 'e', '.', ',' }) == -1)
                         lastText = textBox1.Text.Trim();
@@ -52,11 +56,13 @@ namespace BinaryCalculator
         }
         #endregion
 
+        #region Equals Button
         private void button7_Click(object sender, EventArgs e)
         {
             ProcessData();
             op = "";
         }
+        #endregion
 
         #region ProcessData
         void ProcessData()
@@ -93,6 +99,13 @@ namespace BinaryCalculator
             UpdateValues(textBox1.Text);
             textBox1.Text = "";
             op = (sender as Button).Text;
+        }
+        #endregion
+
+        #region Num Buttons
+        private void num_Click(object sender, EventArgs e)
+        {
+            textBox1.AppendText((sender as Button).Text);
         }
         #endregion
 
