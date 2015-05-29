@@ -47,6 +47,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(212, 20);
             this.textBox1.TabIndex = 0;
+            this.textBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.textBox1_MouseClick);
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // button1
@@ -130,6 +131,7 @@
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "Hexadecimal";
             this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.Click += new System.EventHandler(this.output_Selected);
             // 
             // radioButton2
             // 
@@ -141,6 +143,7 @@
             this.radioButton2.TabStop = true;
             this.radioButton2.Text = "Decimal";
             this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.Click += new System.EventHandler(this.output_Selected);
             // 
             // radioButton3
             // 
@@ -152,6 +155,7 @@
             this.radioButton3.TabStop = true;
             this.radioButton3.Text = "Binary";
             this.radioButton3.UseVisualStyleBackColor = true;
+            this.radioButton3.Click += new System.EventHandler(this.output_Selected);
             // 
             // Form1
             // 

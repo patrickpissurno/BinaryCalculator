@@ -37,9 +37,9 @@ namespace BinaryCalculator
                 {
                     if (textBox1.Text.Length > MAX_LENGTH)
                         throw new Exception();
-                    float.Parse(textBox1.Text);
                     if (!ignoreBlock)
                     {
+                        float.Parse(textBox1.Text);
                         if (textBox1.Text.IndexOfAny(new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'E', 'e', '.', ',' }) == -1)
                             lastText = textBox1.Text.Trim();
                         else
@@ -71,10 +71,11 @@ namespace BinaryCalculator
 
         #region ProcessData
         void ProcessData()
-        {
-            if (string.IsNullOrWhiteSpace(textBox1.Text))
+        {            
+            if (string.IsNullOrWhiteSpace(lastText))
                 textBox1.Text = "0";
-            UpdateValues(textBox1.Text);
+            UpdateValues(lastText);
+
             if (Normalize(value0, "0")[0] != Normalize(value0, "0")[1] || Normalize(value1, "0")[0] != Normalize(value1, "0")[1])
             {
                 switch (op)
@@ -109,6 +110,11 @@ namespace BinaryCalculator
                 ignoreBlock = true;
                 return BinaryToDecimal(val);
             }
+            else if (radioButton1.Checked)
+            {
+                ignoreBlock = true;
+                return BinaryToHexadecimal(val);
+            }
             return val;
         }
         #endregion
@@ -142,7 +148,7 @@ namespace BinaryCalculator
 
         void UpdateValues(string val)
         {
-            if (!ignoreBlock)
+            if (!ignoreBlock && radioButton3.Checked)
             {
                 value1 = value0;
                 value0 = TrimZeros(val);
@@ -320,6 +326,103 @@ namespace BinaryCalculator
             }
 
             return result.ToString();
+        }
+        #endregion
+
+        #region BinaryToHexadecimal
+        string BinaryToHexadecimal(string val)
+        {
+            val = AddZeros(val);
+            string result = "";
+            for (int i = 0; i < val.Length / 4; i++)
+            {
+                switch (val.Substring(i * 4, 4))
+                {
+                    case "0000":
+                        result += "0";
+                        break;
+                    case "0001":
+                        result += "1";
+                        break;
+                    case "0010":
+                        result += "2";
+                        break;
+                    case "0011":
+                        result += "3";
+                        break;
+                    case "0100":
+                        result += "4";
+                        break;
+                    case "0101":
+                        result += "5";
+                        break;
+                    case "0110":
+                        result += "6";
+                        break;
+                    case "0111":
+                        result += "7";
+                        break;
+                    case "1000":
+                        result += "8";
+                        break;
+                    case "1001":
+                        result += "9";
+                        break;
+                    case "1010":
+                        result += "A";
+                        break;
+                    case "1011":
+                        result += "B";
+                        break;
+                    case "1100":
+                        result += "C";
+                        break;
+                    case "1101":
+                        result += "D";
+                        break;
+                    case "1110":
+                        result += "E";
+                        break;
+                    case "1111":
+                        result += "F";
+                        break;
+                }
+            }
+            return result;
+        }
+        #endregion
+
+        #region AddZeros
+        string AddZeros(string val)
+        {
+            string result = val;
+            if (val.Length < 4)
+            {
+                for (int i = 0; i < 4 - val.Length; i++)
+                    result = "0" + result;
+            }
+            else if (val.Length % 4 != 0)
+            {
+                for (int i = 0; i < val.Length % 4; i++)
+                    result = "0" + result;
+            }
+            return result;
+        }
+        #endregion
+
+        #region Events
+        private void textBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (ignoreBlock)
+            {
+                ignoreBlock = false;
+                textBox1.Text += "|";
+            }
+        }
+
+        private void output_Selected(object sender, EventArgs e)
+        {
+            textBox1.Text = ChangeOutput(lastText);
         }
         #endregion
     }
