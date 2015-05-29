@@ -403,7 +403,8 @@ namespace BinaryCalculator
             }
             else if (val.Length % 4 != 0)
             {
-                for (int i = 0; i < val.Length % 4; i++)
+                int num = (((int)Math.Ceiling(val.Length / 4f)) * 4) - val.Length;
+                for (int i = 0; i < num; i++)
                     result = "0" + result;
             }
             return result;
