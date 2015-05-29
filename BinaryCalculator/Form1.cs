@@ -424,6 +424,11 @@ namespace BinaryCalculator
         {
             textBox1.Text = ChangeOutput(lastText);
         }
+
+        private void output_Reset(object sender, EventArgs e)
+        {
+            radioButton3.Select();
+        }
         #endregion
     }
 }

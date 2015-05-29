@@ -132,6 +132,7 @@
             this.radioButton1.Text = "Hexadecimal";
             this.radioButton1.UseVisualStyleBackColor = true;
             this.radioButton1.Click += new System.EventHandler(this.output_Selected);
+            this.radioButton1.MouseLeave += new System.EventHandler(this.output_Reset);
             // 
             // radioButton2
             // 
@@ -144,6 +145,7 @@
             this.radioButton2.Text = "Decimal";
             this.radioButton2.UseVisualStyleBackColor = true;
             this.radioButton2.Click += new System.EventHandler(this.output_Selected);
+            this.radioButton2.MouseLeave += new System.EventHandler(this.output_Reset);
             // 
             // radioButton3
             // 
